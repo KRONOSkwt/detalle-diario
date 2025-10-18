@@ -1,5 +1,11 @@
 import fetch from 'node-fetch';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Estas líneas aseguran que la ruta al archivo 'quote.json' sea siempre correcta.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PROMPT = `
 Actúa como un curador de literatura clásica y poesía. 
@@ -23,17 +29,19 @@ async function fetchNewQuote() {
                     { role: "system", content: "Eres un experto en literatura y poesía romántica." },
                     { role: "user", content: PROMPT }
                 ],
-                model: "llama3-8b-8192", // Un modelo rápido y gratuito
+                model: "llama3-8b-8192",
                 temperature: 0.8,
                 max_tokens: 100,
                 top_p: 1,
-                stream: false,
-                response_format: { type: "json_object" },
+                stream: false
+                // La línea 'response_format' ha sido eliminada para compatibilidad con Groq
             })
         });
 
         if (!response.ok) {
-            throw new Error(`Groq API error! status: ${response.status}`);
+            // Imprimimos el cuerpo del error para más detalles
+            const errorBody = await response.text();
+            throw new Error(`Groq API error! status: ${response.status}, body: ${errorBody}`);
         }
 
         const data = await response.json();
@@ -51,7 +59,9 @@ async function fetchNewQuote() {
 async function updateQuoteFile() {
     const newQuote = await fetchNewQuote();
     if (newQuote && newQuote.quote) {
-        fs.writeFileSync('./data/quote.json', JSON.stringify(newQuote, null, 2));
+        // Usamos path.join para construir la ruta correcta al archivo de datos.
+        const filePath = path.join(__dirname, '../data/quote.json');
+        fs.writeFileSync(filePath, JSON.stringify(newQuote, null, 2));
         console.log("quote.json has been updated successfully.");
     } else {
         console.error("Failed to update quote.json because the new quote was invalid.");
