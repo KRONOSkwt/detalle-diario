@@ -43,7 +43,6 @@ async function fetchNewQuote() {
         }
 
         const data = await response.json();
-        // Groq a veces devuelve el JSON dentro de un string, otras veces no. Esta línea lo maneja.
         const content = data.choices[0].message.content;
         const quoteJson = typeof content === 'string' ? JSON.parse(content) : content;
         
@@ -52,7 +51,6 @@ async function fetchNewQuote() {
 
     } catch (error) {
         console.error("Error fetching new quote:", error);
-        // ¡Importante! Salimos con un código de error para que la Action falle.
         process.exit(1); 
     }
 }
@@ -65,7 +63,6 @@ async function updateQuoteFile() {
         console.log("quote.json has been updated successfully.");
     } else {
         console.error("Failed to update quote.json because the new quote was invalid.");
-        // ¡Importante! Salimos con un código de error para que la Action falle.
         process.exit(1); 
     }
 }
