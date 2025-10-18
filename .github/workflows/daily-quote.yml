@@ -1,0 +1,38 @@
+name: Update Daily Quote
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-quote:
+    runs-on: ubuntu-latest
+
+    # Permisos para que la Action pueda hacer push al repositorio
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: '' # Deshabilita la caché para asegurar una instalación limpia
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run update script
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: node scripts/update-quote.js
+
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Update daily quote"
+          file_pattern: 'data/quote.json'
