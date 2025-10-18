@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// Estas líneas aseguran que la ruta al archivo 'quote.json' sea siempre correcta.
+// Construye la ruta absoluta al directorio del script para evitar errores
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -34,37 +34,39 @@ async function fetchNewQuote() {
                 max_tokens: 100,
                 top_p: 1,
                 stream: false
-                // La línea 'response_format' ha sido eliminada para compatibilidad con Groq
             })
         });
 
         if (!response.ok) {
-            // Imprimimos el cuerpo del error para más detalles
             const errorBody = await response.text();
             throw new Error(`Groq API error! status: ${response.status}, body: ${errorBody}`);
         }
 
         const data = await response.json();
-        const quoteJson = JSON.parse(data.choices[0].message.content);
+        // Groq a veces devuelve el JSON dentro de un string, otras veces no. Esta línea lo maneja.
+        const content = data.choices[0].message.content;
+        const quoteJson = typeof content === 'string' ? JSON.parse(content) : content;
         
         console.log("Successfully fetched quote:", quoteJson);
         return quoteJson;
 
     } catch (error) {
         console.error("Error fetching new quote:", error);
-        return null;
+        // ¡Importante! Salimos con un código de error para que la Action falle.
+        process.exit(1); 
     }
 }
 
 async function updateQuoteFile() {
     const newQuote = await fetchNewQuote();
     if (newQuote && newQuote.quote) {
-        // Usamos path.join para construir la ruta correcta al archivo de datos.
         const filePath = path.join(__dirname, '../data/quote.json');
         fs.writeFileSync(filePath, JSON.stringify(newQuote, null, 2));
         console.log("quote.json has been updated successfully.");
     } else {
         console.error("Failed to update quote.json because the new quote was invalid.");
+        // ¡Importante! Salimos con un código de error para que la Action falle.
+        process.exit(1); 
     }
 }
 
