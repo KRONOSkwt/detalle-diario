@@ -29,7 +29,7 @@ async function fetchNewQuote() {
                     { role: "system", content: "Eres un experto en literatura y poesía romántica." },
                     { role: "user", content: PROMPT }
                 ],
-                model: "llama3-8b-8192",
+                model: "llama3-70b-8192",
                 temperature: 0.8,
                 max_tokens: 100,
                 top_p: 1,
