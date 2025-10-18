@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuestro Jardín Secreto</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M7 20h10'/><path d='M12 20V4'/><path d='M12 4H8c-1.2 0-2 .8-2 2s.8 2 2 2h4'/><path d='M12 4h4c1.2 0 2 .8 2 2s-.8 2-2 2h-4'/></svg>">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <span id="close-modal" class="close-button">&times;</span>
+            <h2>Un Secreto Para Ti</h2>
+            <p>Gracias por cada día de estos 7 meses. Has convertido mi vida en el jardín más bonito.</p>
+            <p>Con todo mi amor.</p>
+        </div>
+    </div>
+
     <div id="petal-container"></div>
 
     <main class="content">
@@ -19,6 +29,7 @@
         </div>
     </main>
 
+    <div id="hidden-bud" title="Un secreto...">🌱</div>
     <div id="watering-can" title="Un poco de cariño">💧</div>
 
     <script src="script.js"></script>

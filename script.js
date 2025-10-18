@@ -50,4 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
             quoteContainer.style.boxShadow = 'none';
         }, 1200);
     });
+
+    const hiddenBud = document.getElementById('hidden-bud');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const closeModal = document.getElementById('close-modal');
+
+    hiddenBud.addEventListener('click', () => {
+        modalOverlay.classList.add('visible');
+    });
+
+    closeModal.addEventListener('click', () => {
+        modalOverlay.classList.remove('visible');
+    });
+    
+    modalOverlay.addEventListener('click', (event) => {
+        if (event.target === modalOverlay) {
+            modalOverlay.classList.remove('visible');
+        }
+    });
 });
